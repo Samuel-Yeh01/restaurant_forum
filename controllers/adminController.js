@@ -3,7 +3,16 @@ const Restaurant = db.Restaurant;
 const adminController = {
   getRestaurants: (req, res) => {
     return Restaurant.findAll().then(restaurants => {
-      return res.render("admin/restaurants", { restaurants: restaurants });
+      res.render(
+        "admin/restaurants",
+        JSON.parse(JSON.stringify({ restaurants: restaurants }))
+      );
+
+      // return res.render("admin/restaurants", {
+      //   restaurants: restaurants,
+      //   user: req.user,
+      //   isAuthenticated: req.isAuthenticated
+      // });
     });
   },
   // CRUD--Create

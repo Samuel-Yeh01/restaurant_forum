@@ -61,7 +61,7 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     adminController.createRestaurant
   );
-  app.post(
+  app.post( 
     "/admin/restaurants",
     authenticatedAdmin,
     adminController.postRestaurant
