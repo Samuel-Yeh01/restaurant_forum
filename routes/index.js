@@ -1,7 +1,9 @@
 const restController = require("../controllers/restController.js");
 const adminController = require("../controllers/adminController.js"); // 加入這行
 const userController = require("../controllers/userController.js"); //引入 userController
-module.exports = app => {
+
+module.exports = (app, passport) => {
+  //新增：接收 passport
   // 建立網站前台入口
   //如果使用者訪問首頁，就導向 /restaurants 的頁面
   app.get("/", (req, res) => res.redirect("/restaurants"));
@@ -19,4 +21,16 @@ module.exports = app => {
   // 建立使用者註冊流程
   app.get("/signup", userController.signUpPage);
   app.post("/signup", userController.signUp);
+
+  app.get("/signin", userController.signInPage);
+  app.post(
+    "/signin",
+    passport.authenticate("local", {
+      failureRedirect: "/signin",
+      failureFlash: true
+    }),
+    userController.signIn
+    // 注意在 POST /signin 的路由裡，我們呼叫了 passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true })，讓 Passport 直接做身份驗證，因為當 userController.signIn 收到 request 時，就一定是登入後的使用者了，這是為什麼剛才在 userController.signIn 沒看到驗證的邏輯。
+  );
+  app.get("/logout", userController.logout);
 };
