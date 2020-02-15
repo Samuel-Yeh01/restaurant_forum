@@ -19,24 +19,18 @@ app.use(bodyParser.urlencoded({ extended: true })); // for 第6行
 app.use(session({ secret: "secret", resave: false, saveUninitialized: false })); // for 第7&8行
 app.use(flash()); // for 第7&8行
 
-// app.use((req, res, next) => {
-//   // 把 req.flash 放到 res.locals 裡面
-//   res.locals.success_messages = req.flash("success_messages");
-//   res.locals.error_messages = req.flash("error_messages");
-//   // 在 res.locals 裡加入 user 變數
-//   res.locals.user = req.user;
-//   next();
-// });
-app.use((req, res, next) => {
-  res.locals.success_messages = req.flash("success_messages");
-  res.locals.error_messages = req.flash("error_messages");
-  res.locals.user = req.user;
-  next();
-});
-
 // setup passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  // 把 req.flash 放到 res.locals 裡面
+  res.locals.success_messages = req.flash("success_messages");
+  res.locals.error_messages = req.flash("error_messages");
+  // 在 res.locals 裡加入 user 變數
+  res.locals.user = req.user;
+  next();
+});
 
 // listen to port 3000
 app.listen(port, () => {
