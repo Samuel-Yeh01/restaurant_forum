@@ -34,6 +34,57 @@ const adminController = {
       req.flash("success_messages", "restaurant was successfully created");
       res.redirect("/admin/restaurants");
     });
+  },
+  // 瀏覽一筆餐廳資料-新增 Controller
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      return res.render(
+        "admin/restaurant",
+        JSON.parse(JSON.stringify({ restaurant: restaurant }))
+      );
+    });
+  },
+  // 編輯一筆餐廳資料-新增 controller
+  editRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      return res.render(
+        "admin/create",
+        JSON.parse(JSON.stringify({ restaurant: restaurant }))
+      );
+    });
+  },
+  // 編輯一筆餐廳資料-新增 controller
+  putRestaurant: (req, res) => {
+    if (!req.body.name) {
+      req.flash("error_messages", "name didn't exist");
+      return res.redirect("back");
+    }
+
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      restaurant
+        .update({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description
+        })
+        .then(restaurant => {
+          req.flash(
+            "success_messages",
+            "restaurant was successfully to update"
+          );
+          res.redirect("/admin/restaurants");
+        });
+    });
+  },
+  // 刪除一筆餐廳資料-新增 Controller
+  deleteRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      restaurant.destroy().then(restaurant => {
+        res.redirect("/admin/restaurants");
+      });
+    });
   }
 };
 

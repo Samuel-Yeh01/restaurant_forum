@@ -61,9 +61,35 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     adminController.createRestaurant
   );
-  app.post( 
+  app.post(
     "/admin/restaurants",
     authenticatedAdmin,
     adminController.postRestaurant
+  );
+  // 瀏覽一筆餐廳資料 -新增路由
+  app.get(
+    "/admin/restaurants/:id",
+    // 路由字串裡的 :id 是在跟 Express 説這是一個會變動的欄位，請幫我匹配到這個網址，並且把 req.params.id 設成同樣的值，傳給 controller 用。
+    // 因此我們可以在 controller 使用 req.params.id 取得動態的 id。
+    authenticatedAdmin,
+    adminController.getRestaurant
+  );
+  // 編輯一筆餐廳資料-新增路由
+  app.get(
+    "/admin/restaurants/:id/edit",
+    authenticatedAdmin,
+    adminController.editRestaurant
+  );
+  //編輯一筆餐廳資料-新增路由
+  app.put(
+    "/admin/restaurants/:id",
+    authenticatedAdmin,
+    adminController.putRestaurant
+  );
+  //刪除一筆餐廳資料-加上路由
+  app.delete(
+    "/admin/restaurants/:id",
+    authenticatedAdmin,
+    adminController.deleteRestaurant
   );
 };

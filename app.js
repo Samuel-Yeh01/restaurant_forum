@@ -6,7 +6,8 @@ const port = 3000;
 const bodyParser = require("body-parser"); // add this
 const flash = require("connect-flash");
 const session = require("express-session");
-const passport = require("./config/passport"); //導入passport
+const passport = require("./config/passport"); //導入 passport
+const methodOverride = require("method-override"); //導入 method-override
 
 // setup handlebars
 app.engine("handlebars", handlebars({ defaultLayout: "main" })); // Handlebars 註冊樣板引擎(for 第2行)
@@ -31,6 +32,9 @@ app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
+// 設定 method-override(for line 10)
+app.use(methodOverride("_method"));
 
 // listen to port 3000
 app.listen(port, () => {
