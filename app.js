@@ -36,6 +36,9 @@ app.use((req, res, next) => {
 // 設定 method-override(for line 10)
 app.use(methodOverride("_method"));
 
+// 設定靜態檔案路徑 /upload
+app.use("/upload", express.static(__dirname + "/upload"));
+
 // listen to port 3000
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);

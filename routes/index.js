@@ -1,6 +1,9 @@
 const restController = require("../controllers/restController.js");
 const adminController = require("../controllers/adminController.js"); // 加入這行
 const userController = require("../controllers/userController.js"); //引入 userController
+// LINE 4&5  為引入 multer
+const multer = require("multer");
+const upload = multer({ dest: "temp/" });
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
@@ -63,6 +66,8 @@ module.exports = (app, passport) => {
   );
   app.post(
     "/admin/restaurants",
+    // 修改後台新增餐廳的路由
+    upload.single("image"),
     authenticatedAdmin,
     adminController.postRestaurant
   );
@@ -84,6 +89,8 @@ module.exports = (app, passport) => {
   app.put(
     "/admin/restaurants/:id",
     authenticatedAdmin,
+    // 修改後台編輯餐廳的路由
+    upload.single("image"),
     adminController.putRestaurant
   );
   //刪除一筆餐廳資料-加上路由
