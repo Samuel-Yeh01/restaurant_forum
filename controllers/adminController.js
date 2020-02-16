@@ -1,6 +1,6 @@
 const db = require("../models");
 const Restaurant = db.Restaurant;
-const fs = require("fs");
+const User = db.User;
 // 實作上傳圖片功能--引入 imgur 並且宣告 client ID：
 const imgur = require("imgur-node-api");
 const IMGUR_CLIENT_ID = "94d3dc824c1ffdf";
@@ -137,6 +137,40 @@ const adminController = {
       restaurant.destroy().then(restaurant => {
         res.redirect("/admin/restaurants");
       });
+    });
+  },
+
+  //A3: 使用者權限管理!
+  getUsers: (req, res) => {
+    return User.findAll().then(users => {
+      // 效果：登入中使用者無須權限轉移
+      let loginUser = req.user.id;
+      for (user of users) {
+        if (user.id === loginUser) {
+          user.dataValues.showLink = false;
+        } else {
+          user.dataValues.showLink = true;
+        }
+      }
+      return res.render("admin/users", {
+        users: JSON.parse(JSON.stringify(users))
+      });
+    });
+  },
+  // 修改使用者權限
+  putUser: (req, res) => {
+    return User.findByPk(req.params.id).then(user => {
+      user
+        .update({
+          isAdmin: !user.isAdmin
+        })
+        .then(user => {
+          req.flash(
+            "success_messages",
+            `Authority of ${user.name} was successfully changed`
+          );
+          res.redirect("/admin/users");
+        });
     });
   }
 };

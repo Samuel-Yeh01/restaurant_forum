@@ -93,10 +93,15 @@ module.exports = (app, passport) => {
     upload.single("image"),
     adminController.putRestaurant
   );
-  //刪除一筆餐廳資料-加上路由
+  //刪除一筆餐廳資料-新增路由
   app.delete(
     "/admin/restaurants/:id",
     authenticatedAdmin,
     adminController.deleteRestaurant
   );
+
+  //帳號權限管理-新增路由
+  app.get("/admin/users", authenticatedAdmin, adminController.getUsers);
+
+  app.put("/admin/users/:id", authenticatedAdmin, adminController.putUser);
 };
