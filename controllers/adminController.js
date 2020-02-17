@@ -4,9 +4,12 @@ const User = db.User;
 // 實作上傳圖片功能--引入 imgur 並且宣告 client ID：
 const imgur = require("imgur-node-api");
 const IMGUR_CLIENT_ID = "94d3dc824c1ffdf";
+// 從DB引入餐廳分類
+const Category = db.Category;
+
 const adminController = {
   getRestaurants: (req, res) => {
-    return Restaurant.findAll().then(restaurants => {
+    return Restaurant.findAll({ include: [Category] }).then(restaurants => {
       res.render(
         "admin/restaurants",
         JSON.parse(JSON.stringify({ restaurants: restaurants }))
@@ -64,12 +67,14 @@ const adminController = {
   },
   // 瀏覽一筆餐廳資料-新增 controller
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      return res.render(
-        "admin/restaurant",
-        JSON.parse(JSON.stringify({ restaurant: restaurant }))
-      );
-    });
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      restaurant => {
+        return res.render(
+          "admin/restaurant",
+          JSON.parse(JSON.stringify({ restaurant: restaurant }))
+        );
+      }
+    );
   },
   // 編輯一筆餐廳資料-新增 controller
   editRestaurant: (req, res) => {
