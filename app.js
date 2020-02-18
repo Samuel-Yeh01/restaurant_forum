@@ -10,7 +10,14 @@ const passport = require("./config/passport"); //導入 passport
 const methodOverride = require("method-override"); //導入 method-override
 
 // setup handlebars
-app.engine("handlebars", handlebars({ defaultLayout: "main" })); // Handlebars 註冊樣板引擎(for 第2行)
+app.engine(
+  "handlebars",
+  handlebars({
+    defaultLayout: "main",
+    // 掛載 Helper 設定(for 新增　handlebars 部分功能)
+    helpers: require("./config/handlebars-helpers")
+  })
+); // Handlebars 註冊樣板引擎(for 第2行)
 app.set("view engine", "handlebars"); // 設定使用 Handlebars 做為樣板引擎
 
 // setup bodyParser
