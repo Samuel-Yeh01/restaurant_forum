@@ -24,7 +24,13 @@ const adminController = {
   },
   // CRUD--Create
   createRestaurant: (req, res) => {
-    return res.render("admin/create");
+    // return res.render("admin/create");
+    Category.findAll().then(categories => {
+      return res.render(
+        "admin/create",
+        JSON.parse(JSON.stringify({ categories: categories }))
+      );
+    });
   },
 
   // 新增一筆餐廳資料-新增 Controller
@@ -78,12 +84,24 @@ const adminController = {
   },
   // 編輯一筆餐廳資料-新增 controller
   editRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      return res.render(
-        "admin/create",
-        JSON.parse(JSON.stringify({ restaurant: restaurant }))
-      );
-    });
+    return Restaurant.findByPk(req.params.id, { nest: true, raw: true }).then(
+      restaurant => {
+        Category.findAll({ nest: true, raw: true }).then(categories => {
+          return res.render("admin/create", {
+            categories: categories,
+            restaurant: restaurant
+          });
+        });
+      }
+    );
+    // return Restaurant.findByPk(req.params.id).then((categories, restaurant) => {
+    //   return res.render(
+    //     "admin/create",
+    //     JSON.parse(
+    //       JSON.stringify({ categories: categories }, { restaurant: restaurant })
+    //     )
+    //   );
+    // });
   },
   // 更新一筆餐廳資料-新增 controller
   putRestaurant: (req, res) => {
