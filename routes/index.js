@@ -128,4 +128,10 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.putCategory
   );
+  // 刪除分類-新增路由 (for line 4)
+  app.delete(
+    "/admin/categories/:id",
+    authenticatedAdmin,
+    categoryController.deleteCategory
+  );
 };
