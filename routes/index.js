@@ -1,6 +1,7 @@
 const restController = require("../controllers/restController.js");
 const adminController = require("../controllers/adminController.js"); // 加入這行
 const userController = require("../controllers/userController.js"); //引入 userController
+const categoryController = require("../controllers/categoryController.js"); //引入瀏覽分類
 // LINE 4&5  為引入 multer
 const multer = require("multer");
 const upload = multer({ dest: "temp/" });
@@ -102,6 +103,12 @@ module.exports = (app, passport) => {
 
   //帳號權限管理-新增路由
   app.get("/admin/users", authenticatedAdmin, adminController.getUsers);
-
   app.put("/admin/users/:id", authenticatedAdmin, adminController.putUser);
+
+  // 瀏覽分類-新增路由 (for line 4)
+  app.get(
+    "/admin/categories",
+    authenticatedAdmin,
+    categoryController.getCategories
+  );
 };

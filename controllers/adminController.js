@@ -122,7 +122,9 @@ const adminController = {
               address: req.body.address,
               opening_hours: req.body.opening_hours,
               description: req.body.description,
-              image: file ? img.data.link : restaurant.image
+              // image: file ? img.data.link : restaurant.image,
+              image: file ? img.data.link : null,
+              CategoryId: req.body.categoryId
             })
             .then(restaurant => {
               req.flash(
@@ -142,7 +144,9 @@ const adminController = {
             address: req.body.address,
             opening_hours: req.body.opening_hours,
             description: req.body.description,
-            image: restaurant.image
+            // image: restaurant.image,
+            image: null,
+            CategoryId: req.body.categoryId
           })
           .then(restaurant => {
             req.flash(
