@@ -111,4 +111,10 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.getCategories
   );
+  // 新增分類-新增路由 (for line 4)
+  app.post(
+    "/admin/categories",
+    authenticatedAdmin,
+    categoryController.postCategory
+  );
 };
