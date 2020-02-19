@@ -42,6 +42,7 @@ let categoryController = {
       });
     }
   },
+  // 新增 putCategory-也要加上負責修改資料 controller action：
   putCategory: (req, res) => {
     if (!req.body.name) {
       req.flash("error_messages", "name didn't exist");
