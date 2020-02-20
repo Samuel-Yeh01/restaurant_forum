@@ -3,8 +3,12 @@ const Restaurant = db.Restaurant;
 const Category = db.Category;
 // 餐廳列表分頁功能
 const pageLimit = 10;
+// 瀏覽評論分頁功能
+const Comment = db.Comment;
+const User = db.User;
 
 const restController = {
+  //前台瀏覽餐廳-總表
   getRestaurants: (req, res) => {
     let offset = 0;
     let whereQuery = {};
@@ -55,7 +59,9 @@ const restController = {
   },
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, {
-      include: Category
+      // 解法： Eager Loading-https://sequelize.org/master/manual/eager-loading.html
+      include: [Category, { model: Comment, include: [User] }]
+      // include: [Category, Comment]
     }).then(restaurant => {
       return res.render(
         "restaurant",

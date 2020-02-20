@@ -1,10 +1,13 @@
 const restController = require("../controllers/restController.js");
 const adminController = require("../controllers/adminController.js"); // 加入這行
 const userController = require("../controllers/userController.js"); //引入 userController
-const categoryController = require("../controllers/categoryController.js"); //引入瀏覽分類
 // LINE 4&5  為引入 multer
 const multer = require("multer");
 const upload = multer({ dest: "temp/" });
+
+const categoryController = require("../controllers/categoryController.js"); //引入瀏覽分類
+// 引入評論分類
+const commentController = require("../controllers/commentController.js");
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
@@ -134,7 +137,14 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.deleteCategory
   );
-
   // 前台瀏覽餐廳個別資料-新增路由
   app.get("/restaurants/:id", authenticated, restController.getRestaurant);
+  // 新增評論-新增路由(for line 10)
+  app.post("/comments", authenticated, commentController.postComment);
+  // (限管理者)刪除評論-新增路由(for line 10)
+  app.delete(
+    "/comments/:id",
+    authenticatedAdmin,
+    commentController.deleteComment
+  );
 };
