@@ -134,4 +134,7 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.deleteCategory
   );
+
+  // 前台瀏覽餐廳個別資料-新增路由
+  app.get("/restaurants/:id", authenticated, restController.getRestaurant);
 };
