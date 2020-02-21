@@ -1,9 +1,11 @@
 const bcrypt = require("bcryptjs");
 const db = require("../models");
 const User = db.User;
+const Restaurant = db.Restaurant;
+const Comment = db.Comment;
+
 // 引入 imgur API
 const imgur = require("imgur-node-api");
-
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
 const userController = {
@@ -57,8 +59,20 @@ const userController = {
   getUser: (req, res) => {
     // 防止用 POSTMAN 發送 PutUser 的 HTTP請求，預防別人偷改其他人的資料。
     if (Number(req.params.id) === req.user.id) {
-      User.findByPk(req.params.id, { raw: true }).then(user => {
-        return res.render("profile", { user });
+      User.findByPk(req.params.id, {
+        include: [{ model: Comment, include: [Restaurant] }]
+      }).then(user => {
+        // 把 Comments中的 Rests.
+        // 依序 push進 commentedRests. array，讓 view 來 render
+        user = JSON.parse(JSON.stringify(user));
+        let commentedRests = [];
+        user.Comments.map(comment => {
+          commentedRests.push(comment.Restaurant);
+        });
+        return res.render("profile", {
+          user,
+          commentedRestaurants: commentedRests
+        });
       });
     } else {
       req.flash("error_messages", "僅限修改自身頁面，請重新登入！");
