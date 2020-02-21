@@ -3,6 +3,7 @@ const db = require("../models");
 const User = db.User;
 // 引入 imgur API
 const imgur = require("imgur-node-api");
+
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
 const userController = {
