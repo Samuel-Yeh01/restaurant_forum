@@ -6,7 +6,7 @@ const Comment = db.Comment;
 
 // 引入 imgur API
 const imgur = require("imgur-node-api");
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID || "94d3dc824c1ffdf";
 
 const userController = {
   signUpPage: (req, res) => {

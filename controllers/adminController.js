@@ -3,7 +3,7 @@ const Restaurant = db.Restaurant;
 const User = db.User;
 // 實作上傳圖片功能--引入 imgur 並且宣告 client ID：
 const imgur = require("imgur-node-api");
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID || "94d3dc824c1ffdf";
 // 從DB引入餐廳分類
 const Category = db.Category;
 
