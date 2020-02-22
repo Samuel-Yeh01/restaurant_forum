@@ -121,8 +121,7 @@ const userController = {
       return User.findByPk(req.params.id).then(user => {
         user
           .update({
-            name: req.body.name,
-            image: null
+            name: req.body.name
           })
           .then(user => {
             req.flash("success_messages", "個人檔案成功更新!");

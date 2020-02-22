@@ -31,7 +31,7 @@ module.exports = (app, passport) => {
   app.get("/", authenticated, (req, res) => res.redirect("/restaurants"));
 
   //在 /restaurants 底下則交給 restController.getRestaurants 來處理
-  app.get("/restaurants", restController.getRestaurants);
+  app.get("/restaurants", authenticated, restController.getRestaurants);
 
   // 建立網站後台入口
   // 連到 /admin 頁面就轉到 /admin/restaurants
