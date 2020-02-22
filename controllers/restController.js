@@ -9,7 +9,7 @@ const User = db.User;
 
 const restController = {
   getRestaurants: (req, res) => {
-    let offset = 0; // 偏移幾筆後“開始”算
+    let offset = 0; // 偏移幾筆後"開始"算~
     let whereQuery = {};
     let categoryId = "";
 
@@ -72,6 +72,13 @@ const restController = {
   },
   getFeeds: (req, res) => {
     return Restaurant.findAll({
+      // 參考 basecamp 上 Ellen 老師的建議：
+      // 現在 res.render 只受理 JS 的原生物件，意即「資料庫回傳的特殊物件」無法直接傳進 template
+      // 1. 單純的 model instance 建議用 raw: true：
+      // 2. 有關聯式到其他 model，可以用 { raw: true, nest: true } ：
+      // 3. 只有一筆資料 (findOne) 的話，也可以直接在傳入 template 時，針對該 instance 直接用 .get() 去取得就好了
+      // raw: true,
+      // nest: true,
       raw: true,
       nest: true,
       limit: 10,
@@ -90,6 +97,21 @@ const restController = {
           comments: comments
         });
       });
+    });
+  },
+  // Add dashboard page
+  getDashboard: (req, res) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: [Category, { model: Comment, include: [User] }]
+    }).then(restaurant => {
+      return res.render(
+        "dashboard",
+        JSON.parse(
+          JSON.stringify({
+            restaurant: restaurant
+          })
+        )
+      );
     });
   }
 };

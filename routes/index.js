@@ -146,6 +146,12 @@ module.exports = (app, passport) => {
 
   // 前台瀏覽餐廳個別資料-新增路由
   app.get("/restaurants/:id", authenticated, restController.getRestaurant);
+  // 瀏覽 dashboard page
+  app.get(
+    "/restaurants/:id/dashboard",
+    authenticated,
+    restController.getDashboard
+  );
   // 新增評論-新增路由(for line 10)
   app.post("/comments", authenticated, commentController.postComment);
   // (限管理者)刪除評論-新增路由(for line 10)
