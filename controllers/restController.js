@@ -39,7 +39,11 @@ const restController = {
       let next = page + 1 > pages ? pages : page + 1;
       const data = result.rows.map(r => ({
         ...r, //spread operator
-        description: r.description.substring(0, 50)
+        description: r.description.substring(0, 50),
+        // 在輸出餐廳列表時，我們看的是「現在這間餐廳」是否有出現在「使用者的收藏清單」裡面。
+        // 我們在 data 裡加入一個 isFavorited 屬性，這裡用 req.user.FavoritedRestaurants 取出使用者的收藏清單，然後 map 成 id 清單，之後用 Array 的 includes 方法進行比對，最後會回傳布林值。
+        // 整段程式碼的意思就是說要來看看現在這間餐廳是不是有被使用者收藏，有的話 isFavorited 就會是 true，否則會是 false。
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
       }));
       Category.findAll({ raw: true }).then(categories => {
         return res.render("restaurants", {
@@ -57,15 +61,24 @@ const restController = {
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, {
       // 解法： Eager Loading-https://sequelize.org/master/manual/eager-loading.html
-      include: [Category, { model: Comment, include: [User] }]
+      include: [
+        Category,
+        { model: User, as: "FavoritedUsers" },
+        { model: Comment, include: [User] }
+      ]
     }).then(restaurant => {
+      // 處理單一餐廳時，我們是檢查「現在的 user」是否有出現在收藏「這間餐廳的使用者列表」裡面。
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(
+        req.user.id
+      );
       // 查了好多文件，LINE 63 被我 TRY 對一次了 QAQ
       restaurant.increment("viewCounts");
       return res.render(
         "restaurant",
         JSON.parse(
           JSON.stringify({
-            restaurant: restaurant
+            restaurant: restaurant,
+            isFavorited: isFavorited
           })
         )
       );

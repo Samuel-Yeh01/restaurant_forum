@@ -3,6 +3,7 @@ const LocalStrategy = require("passport-local");
 const bcrypt = require("bcryptjs");
 const db = require("../models");
 const User = db.User;
+const Restaurant = db.Restaurant; //為了能從 DB 中，撈出使用者的 收藏/喜好的餐廳清單，故引入 db.Restaurant
 
 // setup passport strategy
 // 首先用 passport.use(new LocalStrategy()) 選用認證策略，LocalStrategy 代表我們想要在本地端自己處理跟登入相關的邏輯。
@@ -50,15 +51,12 @@ passport.serializeUser((user, cb) => {
   cb(null, user.id);
 });
 passport.deserializeUser((id, cb) => {
-  User.findByPk(id).then(user => {
+  User.findByPk(id, {
+    include: [{ model: db.Restaurant, as: "FavoritedRestaurants" }]
+  }).then(user => {
     return cb(null, user.get());
   });
 });
-// passport.deserializeUser((id, cb) => {
-//   User.findByPk(id).then(user => {
-//     return cb(null, user.get());
-//   });
-// });
 
 module.exports = passport;
 
