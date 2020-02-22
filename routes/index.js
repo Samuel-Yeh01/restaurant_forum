@@ -161,7 +161,7 @@ module.exports = (app, passport) => {
     commentController.deleteComment
   );
 
-  // Profile路由-CRU(沒有D)
+  // Profile路由-CRU(沒有D)新增路由
   app.get("/users/:id", authenticated, userController.getUser);
   app.get("/users/:id/edit", authenticated, userController.editUser);
   app.put(
@@ -169,5 +169,16 @@ module.exports = (app, passport) => {
     authenticated,
     upload.single("image"),
     userController.putUser
+  );
+  // 加入/移除最愛-新增路由
+  app.post(
+    "/favorite/:restaurantId",
+    authenticated,
+    userController.addFavorite
+  );
+  app.delete(
+    "/favorite/:restaurantId",
+    authenticated,
+    userController.removeFavorite
   );
 };

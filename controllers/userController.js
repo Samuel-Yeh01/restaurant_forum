@@ -3,6 +3,7 @@ const db = require("../models");
 const User = db.User;
 const Restaurant = db.Restaurant;
 const Comment = db.Comment;
+const Favorite = db.Favorite; // 加入/移除最愛功能
 
 // 引入 imgur API
 const imgur = require("imgur-node-api");
@@ -129,6 +130,28 @@ const userController = {
           });
       });
     }
+  },
+  // 當使用者點擊按鈕時，其實新增或移除的資料，是在 Favorite model 上的紀錄，而 UserId 可以透過 Passport 提供的 req.user 取得，而 RestaurantId 要透過前端表單送進來。
+  addFavorite: (req, res) => {
+    return Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    }).then(restaurant => {
+      return res.redirect("back");
+    });
+  },
+
+  removeFavorite: (req, res) => {
+    return Favorite.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(favorite => {
+      favorite.destroy().then(restaurant => {
+        return res.redirect("back");
+      });
+    });
   }
 };
 
