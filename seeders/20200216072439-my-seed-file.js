@@ -33,7 +33,8 @@ module.exports = {
           name: "user2",
           createdAt: new Date(),
           updatedAt: new Date(),
-          image: faker.image.avatar()
+          image: faker.image.avatar(),
+          viewCounts: faker.random.number()
         }
       ],
       {}
