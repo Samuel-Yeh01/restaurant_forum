@@ -28,6 +28,6 @@
     "pg": "^7.18.2",
     "sequelize": "^5.21.4",
     "sequelize-cli": "^5.5.1",
-    "tunnel-agent": ">=0.6.0"
+    "tunnel-agent": "^0.6.0"
   }
 }
