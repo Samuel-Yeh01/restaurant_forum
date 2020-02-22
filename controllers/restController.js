@@ -58,8 +58,9 @@ const restController = {
     return Restaurant.findByPk(req.params.id, {
       // 解法： Eager Loading-https://sequelize.org/master/manual/eager-loading.html
       include: [Category, { model: Comment, include: [User] }]
-      // include: [Category, Comment]
     }).then(restaurant => {
+      // 查了好多文件，LINE 63 被我 TRY 對一次了 QAQ
+      restaurant.increment("viewCounts");
       return res.render(
         "restaurant",
         JSON.parse(
