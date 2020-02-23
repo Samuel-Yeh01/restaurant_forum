@@ -5,6 +5,7 @@ const Restaurant = db.Restaurant;
 const Comment = db.Comment;
 const Favorite = db.Favorite; // 加入/移除最愛功能
 const Like = db.Like; // 喜翻/不喜翻功能
+const Followship = db.Followship; //追蹤功能
 
 // 引入 imgur API
 const imgur = require("imgur-node-api");
@@ -193,6 +194,28 @@ const userController = {
       // 依追蹤者人數排序清單
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount);
       return res.render("topUser", { users: users });
+    });
+  },
+  // 實作追蹤功能
+  addFollowing: (req, res) => {
+    return Followship.create({
+      followerId: req.user.id,
+      followingId: req.params.userId
+    }).then(followship => {
+      return res.redirect("back");
+    });
+  },
+
+  removeFollowing: (req, res) => {
+    return Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    }).then(followship => {
+      followship.destroy().then(followship => {
+        return res.redirect("back");
+      });
     });
   }
 };

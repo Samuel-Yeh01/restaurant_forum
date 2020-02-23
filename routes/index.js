@@ -186,4 +186,12 @@ module.exports = (app, passport) => {
   );
   app.post("/like/:restaurantId", authenticated, userController.addLike);
   app.delete("/like/:restaurantId", authenticated, userController.removeLike);
+
+  // 追蹤功能-新增路由
+  app.post("/following/:userId", authenticated, userController.addFollowing);
+  app.delete(
+    "/following/:userId",
+    authenticated,
+    userController.removeFollowing
+  );
 };
