@@ -161,6 +161,9 @@ module.exports = (app, passport) => {
     commentController.deleteComment
   );
 
+  // 美食達人-新增路由
+  // 注意這組路由要放在 GET /users/:id 的前面，不然 /users/top 會被優先用 /users/:id 的結構來解析
+  app.get("/users/top", authenticated, userController.getTopUser);
   // Profile路由-CRU(沒有D)新增路由
   app.get("/users/:id", authenticated, userController.getUser);
   app.get("/users/:id/edit", authenticated, userController.editUser);
