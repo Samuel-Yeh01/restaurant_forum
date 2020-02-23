@@ -4,6 +4,7 @@ const User = db.User;
 const Restaurant = db.Restaurant;
 const Comment = db.Comment;
 const Favorite = db.Favorite; // 加入/移除最愛功能
+const Like = db.Like; // 喜翻/不喜翻功能
 
 // 引入 imgur API
 const imgur = require("imgur-node-api");
@@ -148,6 +149,28 @@ const userController = {
       }
     }).then(favorite => {
       favorite.destroy().then(restaurant => {
+        return res.redirect("back");
+      });
+    });
+  },
+
+  addLike: (req, res) => {
+    return Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    }).then(restaurant => {
+      return res.redirect("back");
+    });
+  },
+
+  removeLike: (req, res) => {
+    return Like.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(like => {
+      like.destroy().then(restaurant => {
         return res.redirect("back");
       });
     });

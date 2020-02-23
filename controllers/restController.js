@@ -43,7 +43,10 @@ const restController = {
         // 在輸出餐廳列表時，我們看的是「現在這間餐廳」是否有出現在「使用者的收藏清單」裡面。
         // 我們在 data 裡加入一個 isFavorited 屬性，這裡用 req.user.FavoritedRestaurants 取出使用者的收藏清單，然後 map 成 id 清單，之後用 Array 的 includes 方法進行比對，最後會回傳布林值。
         // 整段程式碼的意思就是說要來看看現在這間餐廳是不是有被使用者收藏，有的話 isFavorited 就會是 true，否則會是 false。
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(
+          r.id
+        ),
+        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
       }));
       Category.findAll({ raw: true }).then(categories => {
         return res.render("restaurants", {
@@ -64,6 +67,7 @@ const restController = {
       include: [
         Category,
         { model: User, as: "FavoritedUsers" },
+        { model: User, as: "LikedUsers" },
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
@@ -71,14 +75,18 @@ const restController = {
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(
         req.user.id
       );
-      // 查了好多文件，LINE 63 被我 TRY 對一次了 QAQ
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(
+        req.user.id
+      );
+      // 查了好多文件，被我 TRY 對一次了 QAQ
       restaurant.increment("viewCounts");
       return res.render(
         "restaurant",
         JSON.parse(
           JSON.stringify({
             restaurant: restaurant,
-            isFavorited: isFavorited
+            isFavorited: isFavorited,
+            isLiked: isLiked
           })
         )
       );

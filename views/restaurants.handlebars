@@ -37,14 +37,35 @@
 
         {{!-- 新增 移除最愛 & 加到最愛 兩個按鈕 --}}
         {{!-- Handlebars 在處理資料時，每筆餐廳物件上就有一個 isFavorited 屬性，讓 Handlebars 可以用 if/else 去判斷要渲染哪一個按鈕。 --}}
-        {{#if this.isFavorited }}
-        <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
-            class="btn btn-danger">移除最愛</button></form>
-        {{else}}
-        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button>
-        </form>
-        {{/if}}
-
+        <div class="row">
+          {{#if this.isFavorited }}
+          <form class="col" action="/favorite/{{this.id}}?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-danger">
+              移除最愛
+            </button>
+          </form>
+          {{else}}
+          <form class="col" action="/favorite/{{this.id}}" method="POST">
+            <button type="submit" class="btn btn-primary">
+              加到最愛
+            </button>
+          </form>
+          {{/if}}
+          {{!-- 新增 喜翻 & 不喜翻 兩個按鈕 --}}
+          {{#if this.isLiked }}
+          <form class="col" action="/like/{{this.id}}?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-outline-danger">
+              Unlike
+            </button>
+          </form>
+          {{else}}
+          <form class="col" action="/like/{{this.id}}" method="POST">
+            <button type="submit" class="btn btn-outline-primary">
+              Like
+            </button>
+          </form>
+          {{/if}}
+        </div>
       </div>
     </div>
   </div>
