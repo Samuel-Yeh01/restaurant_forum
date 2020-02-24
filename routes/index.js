@@ -141,9 +141,9 @@ module.exports = (app, passport) => {
   // 最新動態：Feeds
   // 這裡要特別注意順序，因為因為 '/restaurants/feeds' 這組字串也符合動態路由 '/restaurants/:id' 的結構，會被視為「:id 是 feeds」而導向單一餐廳的頁面( line148 )
   // 要特別注意順序，確保 '/restaurants/feeds' 先被解析到，才能正確地匹配到 restController.getFeeds
-  // 所以下面這行，一定要擺在 line 148的前面!
+  // 所以下面這兩行，一定要擺在 line 148的前面!
   app.get("/restaurants/feeds", authenticated, restController.getFeeds);
-
+  app.get("/restaurants/top", authenticated, restController.getTopRestaurant);
   // 前台瀏覽餐廳個別資料-新增路由
   app.get("/restaurants/:id", authenticated, restController.getRestaurant);
   // 瀏覽 dashboard page

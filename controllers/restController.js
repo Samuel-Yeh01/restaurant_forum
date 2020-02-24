@@ -135,6 +135,31 @@ const restController = {
         )
       );
     });
+  },
+  // 實作人氣餐廳頁面
+  getTopRestaurant: (req, res) => {
+    // 撈出所有 Restaurant 與 Users 資料(from models\restaurant.js)
+    return Restaurant.findAll({
+      include: [{ model: User, as: "FavoritedUsers" }]
+    }).then(restaurants => {
+      // 整理 restaurants 資料
+      restaurants = restaurants.map(restaurant => ({
+        ...restaurant.dataValues,
+        // description 縮在50字以內
+        description: restaurant.description.substring(0, 50),
+        // 計算該餐廳總收藏人數
+        FavoritedCount: restaurant.FavoritedUsers.length,
+        // 判斷目前登入使用者是否已追蹤該"餐廳"(物件)，並設為 restaurant的 isFavorited屬性，讓 view 判斷
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(
+          restaurant.id
+        )
+      }));
+      // 餐廳依追蹤者人數排序清單-只取前十名
+      restaurants = restaurants
+        .sort((a, b) => b.FavoritedCount - a.FavoritedCount)
+        .slice(0, 10); //只取前十名!
+      return res.render("TopRestaurant", { restaurants: restaurants });
+    });
   }
 };
 
