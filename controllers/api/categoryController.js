@@ -1,12 +1,11 @@
-const db = require("../models");
+const db = require("../../models");
 const Category = db.Category;
-const categoryService = require("../services/categoryService.js");
+const categoryService = require("../../services/categoryService.js");
 let categoryController = {
   // 瀏覽分類
   getCategories: (req, res) => {
-    // 調整 getCategories
     categoryService.getCategories(req, res, data => {
-      return res.render("admin/categories", data);
+      return res.json(data);
     });
   },
   // 新增分類

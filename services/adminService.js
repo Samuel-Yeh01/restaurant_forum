@@ -3,12 +3,13 @@ const Restaurant = db.Restaurant;
 const Category = db.Category;
 
 const adminController = {
+  // 瀏覽全部餐廳資料- 新增 service
   getRestaurants: (req, res, callback) => {
     return Restaurant.findAll({ include: [Category] }).then(restaurants => {
       callback({ restaurants: restaurants });
     });
   },
-  // 瀏覽一筆餐廳資料-新增 controller
+  // 瀏覽一筆餐廳資料-新增 service
   getRestaurant: (req, res, callback) => {
     return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
       restaurant => {
