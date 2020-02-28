@@ -6,11 +6,15 @@ const adminController = {
   getRestaurants: (req, res, callback) => {
     return Restaurant.findAll({ include: [Category] }).then(restaurants => {
       callback({ restaurants: restaurants });
-      // res.render(
-      //   "admin/restaurants",
-      //   JSON.parse(JSON.stringify({ restaurants: restaurants }))
-      // );
     });
+  },
+  // 瀏覽一筆餐廳資料-新增 controller
+  getRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      restaurant => {
+        callback({ restaurant: restaurant });
+      }
+    );
   },
   // CRUD--Create
   createRestaurant: (req, res) => {
@@ -61,17 +65,7 @@ const adminController = {
       });
     }
   },
-  // 瀏覽一筆餐廳資料-新增 controller
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-      restaurant => {
-        return res.render(
-          "admin/restaurant",
-          JSON.parse(JSON.stringify({ restaurant: restaurant }))
-        );
-      }
-    );
-  },
+
   // 編輯一筆餐廳資料-新增 controller
   editRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, { nest: true, raw: true }).then(

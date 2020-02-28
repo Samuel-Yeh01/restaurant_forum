@@ -8,12 +8,18 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID || "94d3dc824c1ffdf";
 const Category = db.Category;
 
 const adminController = {
+  // 瀏覽全部餐廳資料- 新增 controller
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, data => {
       return res.render("admin/restaurants", data);
     });
   },
-
+  // 瀏覽一筆餐廳資料-新增 controller
+  getRestaurant: (req, res) => {
+    adminService.getRestaurant(req, res, data => {
+      return res.render("admin/restaurant", data);
+    });
+  },
   // CRUD--Create
   createRestaurant: (req, res) => {
     // return res.render("admin/create");
@@ -63,17 +69,7 @@ const adminController = {
       });
     }
   },
-  // 瀏覽一筆餐廳資料-新增 controller
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-      restaurant => {
-        return res.render(
-          "admin/restaurant",
-          JSON.parse(JSON.stringify({ restaurant: restaurant }))
-        );
-      }
-    );
-  },
+
   // 編輯一筆餐廳資料-新增 controller
   editRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, { nest: true, raw: true }).then(
