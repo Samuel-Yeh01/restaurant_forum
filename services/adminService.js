@@ -1,19 +1,17 @@
 const db = require("../models");
 const Restaurant = db.Restaurant;
-const User = db.User;
-// 實作上傳圖片功能--引入 imgur 並且宣告 client ID：
-const imgur = require("imgur-node-api");
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID || "94d3dc824c1ffdf";
-// 從DB引入餐廳分類
 const Category = db.Category;
 
 const adminController = {
-  getRestaurants: (req, res) => {
-    adminService.getRestaurants(req, res, data => {
-      return res.render("admin/restaurants", data);
+  getRestaurants: (req, res, callback) => {
+    return Restaurant.findAll({ include: [Category] }).then(restaurants => {
+      callback({ restaurants: restaurants });
+      // res.render(
+      //   "admin/restaurants",
+      //   JSON.parse(JSON.stringify({ restaurants: restaurants }))
+      // );
     });
   },
-
   // CRUD--Create
   createRestaurant: (req, res) => {
     // return res.render("admin/create");
