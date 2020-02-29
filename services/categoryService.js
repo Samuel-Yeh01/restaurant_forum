@@ -37,18 +37,24 @@ let categoryController = {
     }
   },
   // 更新 putCategory-也要加上負責修改資料 controller action：
-  putCategory: (req, res) => {
+  putCategory: (req, res, callback) => {
     if (!req.body.name) {
-      req.flash("error_messages", "name didn't exist");
-      return res.redirect("back");
+      return callback({
+        status: "error",
+        message: "Category didn't exist"
+      });
     } else {
       return Category.findByPk(req.params.id).then(category => {
         category.update(req.body).then(category => {
-          res.redirect("/admin/categories");
+          callback({
+            status: "success",
+            message: "Category was successfully updated"
+          });
         });
       });
     }
   },
+
   // 刪除分類
   deleteCategory: (req, res) => {
     return Category.findByPk(req.params.id).then(category => {

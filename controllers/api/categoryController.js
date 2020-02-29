@@ -15,17 +15,10 @@ let categoryController = {
     });
   },
   // 新增 putCategory-也要加上負責修改資料 controller action：
-  putCategory: (req, res) => {
-    if (!req.body.name) {
-      req.flash("error_messages", "name didn't exist");
-      return res.redirect("back");
-    } else {
-      return Category.findByPk(req.params.id).then(category => {
-        category.update(req.body).then(category => {
-          res.redirect("/admin/categories");
-        });
-      });
-    }
+  putCategory: (req, res, data) => {
+    categoryService.putCategory(req, res, data => {
+      return res.json(data);
+    });
   },
   // 刪除分類
   deleteCategory: (req, res) => {
