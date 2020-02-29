@@ -19,19 +19,24 @@ let categoryController = {
   // 調整 getCategories
 
   // 新增分類
-  postCategory: (req, res) => {
+  postCategory: (req, res, callback) => {
     if (!req.body.name) {
-      req.flash("error_messages", "name didn't exist");
-      return res.redirect("back");
+      return callback({
+        status: "error",
+        message: "Category didn't exist"
+      });
     } else {
       return Category.create({
         name: req.body.name
       }).then(category => {
-        res.redirect("/admin/categories");
+        callback({
+          status: "success",
+          message: "Category was successfully created"
+        });
       });
     }
   },
-  // 新增 putCategory-也要加上負責修改資料 controller action：
+  // 更新 putCategory-也要加上負責修改資料 controller action：
   putCategory: (req, res) => {
     if (!req.body.name) {
       req.flash("error_messages", "name didn't exist");
