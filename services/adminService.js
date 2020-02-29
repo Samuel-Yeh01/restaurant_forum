@@ -17,6 +17,16 @@ const adminController = {
       }
     );
   },
+
+  // 刪除一筆餐廳資料-新增 Controller
+  deleteRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      restaurant.destroy().then(restaurant => {
+        callback({ status: "success", message: "" });
+      });
+    });
+  },
+
   // CRUD--Create
   createRestaurant: (req, res) => {
     // return res.render("admin/create");
@@ -142,14 +152,6 @@ const adminController = {
           });
       });
     }
-  },
-  // 刪除一筆餐廳資料-新增 Controller
-  deleteRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      restaurant.destroy().then(restaurant => {
-        res.redirect("/admin/restaurants");
-      });
-    });
   },
 
   //A3: 使用者權限管理!

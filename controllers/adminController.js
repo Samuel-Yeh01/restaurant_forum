@@ -20,6 +20,16 @@ const adminController = {
       return res.render("admin/restaurant", data);
     });
   },
+  // 刪除一筆餐廳資料-新增 Controller
+  // 而在原本處理 view 的 controllers/adminController.js，我們可以加一個判斷式，若收到 success，就跳回後台的餐廳總表：
+  deleteRestaurant: (req, res) => {
+    adminService.deleteRestaurant(req, res, data => {
+      if (data["status"] === "success") {
+        return res.redirect("/admin/restaurants");
+      }
+    });
+  },
+
   // CRUD--Create
   createRestaurant: (req, res) => {
     // return res.render("admin/create");
@@ -145,14 +155,6 @@ const adminController = {
           });
       });
     }
-  },
-  // 刪除一筆餐廳資料-新增 Controller
-  deleteRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      restaurant.destroy().then(restaurant => {
-        res.redirect("/admin/restaurants");
-      });
-    });
   },
 
   //A3: 使用者權限管理!
