@@ -32,7 +32,10 @@ const adminController = {
   // 新增一筆餐廳資料-新增 Controller
   postRestaurant: (req, res, callback) => {
     if (!req.body.name) {
-      return callback({ status: "error", message: "name didn't exist" });
+      return callback({
+        status: "error",
+        message: "name didn't exist"
+      });
     }
     const { file } = req; // equal to const file = req.file
     if (file) {
@@ -69,6 +72,61 @@ const adminController = {
       });
     }
   },
+  // 更新一筆餐廳資料-新增 controller
+  putRestaurant: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({
+        status: "error",
+        message: "name didn't exist"
+      });
+    }
+
+    const { file } = req;
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        return Restaurant.findByPk(req.params.id).then(restaurant => {
+          restaurant
+            .update({
+              name: req.body.name,
+              tel: req.body.tel,
+              address: req.body.address,
+              opening_hours: req.body.opening_hours,
+              description: req.body.description,
+              // image: file ? img.data.link : restaurant.image,
+              image: file ? img.data.link : null,
+              CategoryId: req.body.categoryId
+            })
+            .then(restaurant => {
+              callback({
+                status: "success",
+                message: "restaurant was successfully updated"
+              });
+            });
+        });
+      });
+    } else {
+      return Restaurant.findByPk(req.params.id).then(restaurant => {
+        restaurant
+          .update({
+            name: req.body.name,
+            tel: req.body.tel,
+            address: req.body.address,
+            opening_hours: req.body.opening_hours,
+            description: req.body.description,
+            // image: restaurant.image,
+            image: null,
+            CategoryId: req.body.categoryId
+          })
+          .then(restaurant => {
+            callback({
+              status: "success",
+              message: "restaurant was successfully updated"
+            });
+          });
+      });
+    }
+  },
   // CRUD--Create
   createRestaurant: (req, res) => {
     // return res.render("admin/create");
@@ -100,61 +158,6 @@ const adminController = {
     //     )
     //   );
     // });
-  },
-  // 更新一筆餐廳資料-新增 controller
-  putRestaurant: (req, res) => {
-    if (!req.body.name) {
-      req.flash("error_messages", "name didn't exist");
-      return res.redirect("back");
-    }
-
-    const { file } = req;
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID);
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.findByPk(req.params.id).then(restaurant => {
-          restaurant
-            .update({
-              name: req.body.name,
-              tel: req.body.tel,
-              address: req.body.address,
-              opening_hours: req.body.opening_hours,
-              description: req.body.description,
-              // image: file ? img.data.link : restaurant.image,
-              image: file ? img.data.link : null,
-              CategoryId: req.body.categoryId
-            })
-            .then(restaurant => {
-              req.flash(
-                "success_messages",
-                "restaurant was successfully to update"
-              );
-              res.redirect("/admin/restaurants");
-            });
-        });
-      });
-    } else {
-      return Restaurant.findByPk(req.params.id).then(restaurant => {
-        restaurant
-          .update({
-            name: req.body.name,
-            tel: req.body.tel,
-            address: req.body.address,
-            opening_hours: req.body.opening_hours,
-            description: req.body.description,
-            // image: restaurant.image,
-            image: null,
-            CategoryId: req.body.categoryId
-          })
-          .then(restaurant => {
-            req.flash(
-              "success_messages",
-              "restaurant was successfully to update"
-            );
-            res.redirect("/admin/restaurants");
-          });
-      });
-    }
   },
 
   //A3: 使用者權限管理!
