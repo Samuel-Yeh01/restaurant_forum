@@ -9,23 +9,21 @@ let categoryController = {
     });
   },
   // 新增分類
-  postCategory: (req, res, data) => {
+  postCategory: (req, res) => {
     categoryService.postCategory(req, res, data => {
       return res.json(data);
     });
   },
   // 新增 putCategory-也要加上負責修改資料 controller action：
-  putCategory: (req, res, data) => {
+  putCategory: (req, res) => {
     categoryService.putCategory(req, res, data => {
       return res.json(data);
     });
   },
   // 刪除分類
   deleteCategory: (req, res) => {
-    return Category.findByPk(req.params.id).then(category => {
-      category.destroy().then(category => {
-        res.redirect("/admin/categories");
-      });
+    categoryService.deleteCategory(req, res, data => {
+      return res.json(data);
     });
   }
 };
