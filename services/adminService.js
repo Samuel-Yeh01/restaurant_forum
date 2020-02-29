@@ -1,6 +1,8 @@
 const db = require("../models");
 const Restaurant = db.Restaurant;
 const Category = db.Category;
+const imgur = require("imgur-node-api");
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID || "94d3dc824c1ffdf";
 
 const adminController = {
   // 瀏覽全部餐廳資料- 新增 service
@@ -27,39 +29,28 @@ const adminController = {
     });
   },
 
-  // CRUD--Create
-  createRestaurant: (req, res) => {
-    // return res.render("admin/create");
-    Category.findAll().then(categories => {
-      return res.render(
-        "admin/create",
-        JSON.parse(JSON.stringify({ categories: categories }))
-      );
-    });
-  },
-
   // 新增一筆餐廳資料-新增 Controller
-  postRestaurant: (req, res) => {
+  postRestaurant: (req, res, callback) => {
     if (!req.body.name) {
-      req.flash("error_messages", "name didn't exist");
-      return res.redirect("back");
+      return callback({ status: "error", message: "name didn't exist" });
     }
-
     const { file } = req; // equal to const file = req.file
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
-        if (err) console.log("Error: ", err);
         return Restaurant.create({
           name: req.body.name,
           tel: req.body.tel,
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: file ? img.data.link : null
+          image: file ? img.data.link : null,
+          CategoryId: req.body.categoryId
         }).then(restaurant => {
-          req.flash("success_messages", "restaurant was successfully created");
-          return res.redirect("/admin/restaurants");
+          callback({
+            status: "success",
+            message: "restaurant was successfully created"
+          });
         });
       });
     } else {
@@ -69,12 +60,24 @@ const adminController = {
         address: req.body.address,
         opening_hours: req.body.opening_hours,
         description: req.body.description,
-        image: null
+        CategoryId: req.body.categoryId
       }).then(restaurant => {
-        req.flash("success_messages", "restaurant was successfully created");
-        return res.redirect("/admin/restaurants");
+        callback({
+          status: "success",
+          message: "restaurant was successfully created"
+        });
       });
     }
+  },
+  // CRUD--Create
+  createRestaurant: (req, res) => {
+    // return res.render("admin/create");
+    Category.findAll().then(categories => {
+      return res.render(
+        "admin/create",
+        JSON.parse(JSON.stringify({ categories: categories }))
+      );
+    });
   },
 
   // 編輯一筆餐廳資料-新增 controller

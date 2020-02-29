@@ -22,6 +22,7 @@ app.set("view engine", "handlebars"); // 設定使用 Handlebars 做為樣板引
 
 // setup bodyParser
 app.use(bodyParser.urlencoded({ extended: true })); // for 第6行
+app.use(bodyParser.json());
 
 // setup session and flash
 app.use(session({ secret: "secret", resave: false, saveUninitialized: false })); // for 第7&8行
