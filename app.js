@@ -9,6 +9,8 @@ const session = require("express-session");
 const passport = require("./config/passport"); //導入 passport
 const methodOverride = require("method-override"); //導入 method-override
 
+require("dotenv").config(); //Node.js 使用 .env 加上環境變數--隱藏敏感資訊
+
 // setup handlebars
 app.engine(
   "handlebars",
