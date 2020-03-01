@@ -6,6 +6,12 @@ const User = db.User;
 const Restaurant = db.Restaurant; //為了能從 DB 中，撈出使用者的 收藏/喜好的餐廳清單，故引入 db.Restaurant
 const Like = db.Like;
 
+// JWT
+const jwt = require("jsonwebtoken");
+const passportJWT = require("passport-jwt");
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
+
 // setup passport strategy
 // 首先用 passport.use(new LocalStrategy()) 選用認證策略，LocalStrategy 代表我們想要在本地端自己處理跟登入相關的邏輯。
 
@@ -63,6 +69,26 @@ passport.deserializeUser((id, cb) => {
     return cb(null, user.get());
   });
 });
+
+let jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = process.env.JWT_SECRET;
+
+let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+  User.findByPk(jwt_payload.id, {
+    include: [
+      { model: db.Restaurant, as: "FavoritedRestaurants" },
+      { model: db.Restaurant, as: "LikedRestaurants" },
+      { model: User, as: "Followers" },
+      { model: User, as: "Followings" }
+    ]
+  }).then(user => {
+    if (!user) return next(null, false);
+    return next(null, user);
+  });
+});
+
+passport.use(strategy);
 
 module.exports = passport;
 
